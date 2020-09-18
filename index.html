@@ -12,6 +12,23 @@
    </head>
    <body>
 
+     <div class="calendar_wrappper">
+       <header>
+         <nav>
+           <h3>Gennaio 2018</h3>
+           <span>&lt;- precedente</span>
+           <span>successivo -&gt;</span>
+         </nav>
+       </header>
+       <ul class="days">
+
+       </ul>
+     </div>
+
+    <script id="day-template" type="text/x-handlebars-template">
+      <li class="day">{{day}} {{month}} -<span>{{holyday}}</span></li>
+    </script>
+
      <script src="js/script.js" charset="utf-8"></script>
    </body>
  </html>
