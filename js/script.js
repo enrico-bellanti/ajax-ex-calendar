@@ -18,6 +18,11 @@ $(document).ready(function() {
     if (setMonth < 12) {
       setMonth++;
       printMonth(setYear, setMonth);
+    } else {
+      setMonth = 1;
+      setYear++;
+      printMonth(setYear, setMonth);
+
     }
   });
   // al click su prev cambia il calendario al mese precedente
@@ -25,9 +30,13 @@ $(document).ready(function() {
     if (setMonth > 1) {
       setMonth--;
       printMonth(setYear, setMonth);
+    } else {
+      setMonth = 12;
+      setYear--;
+      printMonth(setYear, setMonth);
     }
   });
-  
+
 });
 // end document ready
 
@@ -58,7 +67,7 @@ function printMonth(year, month) {
    {
     "url": "https://flynn.boolean.careers/exercises/api/holidays",
     "data": {
-      "year": year,
+      "year": 2018, //year
       "month": monthIndex
     },
     "method": "GET",
@@ -71,12 +80,12 @@ function printMonth(year, month) {
       for (var i = 0; i < daysInMonth; i++) {
         // trasforma l'oggetto moment in stringa
         var momentDateInFormat = momentDate.format("YYYY-MM-DD");
+        // salvo il giorno reale corrente nel ciclo
+        var currentDay = i+1;
 
         // dichiaro la variabile holydayName che andro a compilare se
         // momentDateInFormat e' un festivo
         var holidayName = "";
-        // salvo il giorno reale corrente nel ciclo
-        var currentDay = i+1;
 
         // verifica giorni festivi e se presente aggiungo nome nel template
         for (var j = 0; j < holidayList.length; j++) {
