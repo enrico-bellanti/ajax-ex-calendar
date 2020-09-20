@@ -22,7 +22,6 @@ $(document).ready(function() {
       setMonth = 1;
       setYear++;
       printMonth(setYear, setMonth);
-
     }
   });
   // al click su prev cambia il calendario al mese precedente
@@ -72,7 +71,6 @@ function printMonth(year, month) {
     },
     "method": "GET",
     "success": function (data) {
-      var dataHoliday = data;
       // ricava un array con le festivita
       var holidayList = data.response;
 
@@ -93,7 +91,7 @@ function printMonth(year, month) {
           var holidayDate = holidayList[j].date;
           // condizione che controlla se la data festivo corrisponde
           if (holidayDate == momentDateInFormat) {
-            holidayName = holidayList[j].name
+            holidayName = holidayList[j].name;
           }
 
         }
@@ -103,7 +101,7 @@ function printMonth(year, month) {
         var context = {
           "day": currentDay,
           "month": monthInPrinting,
-          "dataMoment": momentDateInFormat,
+          "dataMoment": momentDateInFormat, //non utilizzato per ora ma utile in futuro
           "holiday": holidayName
         };
         // appendi in html
@@ -119,7 +117,7 @@ function printMonth(year, month) {
       // end for i
     },
     "error": function (err) {
-      alert("E avvenuto un errore. "+ errore);
+      alert("E avvenuto un errore. " + err);
     }
   });
   // end server call ajax
