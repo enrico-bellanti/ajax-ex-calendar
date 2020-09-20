@@ -7,17 +7,19 @@
      <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.2/handlebars.min.js"></script>
      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
      <script src="https://momentjs.com/downloads/moment.min.js" charset="utf-8"></script>
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css">
+     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
      <link rel="stylesheet" href="css/style.css">
      <title>Calendar</title>
    </head>
    <body>
 
      <div class="calendar_wrappper">
-       <header>
-         <nav>
-           <h3>Gennaio 2018</h3>
-           <span>&lt;- precedente</span>
-           <span>successivo -&gt;</span>
+       <header class="calendar_header">
+         <h3 class="actual_date"></h3>
+         <nav class="calendar_nav">
+           <span id="prev"><i class="fas fa-angle-up angle_up"></i></span>
+           <span id="next"><i class="fas fa-angle-down angle_down"></i></span>
          </nav>
        </header>
        <ul class="days">
@@ -26,9 +28,16 @@
      </div>
 
     <script id="day-template" type="text/x-handlebars-template">
-      <li class="day">{{day}} {{month}} -<span class="name_holiday">{{holiday}}</span></li>
+      <li class="day_box" data-moment="{{dataMoment}}">
+        <div class="day_text">
+          <h3 class="day_text_day">{{day}}</h3>
+          <h4 class="day_text_month">{{month}}</h4>
+          <h5 class="name_holiday">{{holiday}}</h5>
+        </div>
+      </li>
     </script>
 
+     <!-- <script src="js/script.js" charset="utf-8"></script> -->
      <script src="js/script.js" charset="utf-8"></script>
    </body>
  </html>
