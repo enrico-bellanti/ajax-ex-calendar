@@ -1,27 +1,23 @@
-// Descrizione:
-// Creiamo un calendario dinamico con le festività.
-// Il calendario partirà da gennaio 2018 e si concluderà a dicembre 2018
-// (unici dati disponibili sull’API).
-// Milestone 1
-// Creiamo il mese di Gennaio, e con la chiamata all'API inseriamo le festività.
-// API: https://flynn.boolean.careers/exercises/api/holidays?year=2018&month=0
-
+// METODO CHE STAMPA LE FESTIVITA SUCCESSIVAMENTE ALLA CREAZIONE DEL CALENDARIO
 $(document).ready(function() {
   // dichiaro variabili per settare la data
   var setYear = 2018;
   var setMonth = 1;
   // mostro Gennaio 2018 all'avvio della pagina
   printMonth(setYear, setMonth);
+  printHolidays(setYear, setMonth);
 
   // al click su next cambia il calendario al mese successivo
   $("#next").click(function() {
     if (setMonth < 12) {
       setMonth++;
       printMonth(setYear, setMonth);
+      printHolidays(setYear, setMonth);
     } else {
       setMonth = 1;
       setYear++;
       printMonth(setYear, setMonth);
+      printHolidays(setYear, setMonth);
     }
   });
   // al click su prev cambia il calendario al mese precedente
@@ -29,10 +25,12 @@ $(document).ready(function() {
     if (setMonth > 1) {
       setMonth--;
       printMonth(setYear, setMonth);
+      printHolidays(setYear, setMonth);
     } else {
       setMonth = 12;
       setYear--;
       printMonth(setYear, setMonth);
+      printHolidays(setYear, setMonth);
     }
   });
 
@@ -46,9 +44,7 @@ function printMonth(year, month) {
   // resetta calendario attuale
   $(".day_box").remove();
   // ottengo oggetto momentjs
-  var momentDate = setMomentDate(year, month);
-  // ricava il mese attuale in indice array (parte da zero)
-  var monthIndex = momentDate.months();
+  var momentDate = getMomentDate(year, month);
   // ricavo il numero dei giorni del mese
   var daysInMonth = momentDate.daysInMonth();
   // ricavo nome del mese
@@ -61,18 +57,6 @@ function printMonth(year, month) {
   var source = $("#day-template").html();
   var dayTemplate = Handlebars.compile(source);
 
-  // faccio chiamata al server per scaricare la lista festivita del mese richiesto
-  $.ajax(
-   {
-    "url": "https://flynn.boolean.careers/exercises/api/holidays",
-    "data": {
-      "year": 2018, //year
-      "month": monthIndex
-    },
-    "method": "GET",
-    "success": function (data) {
-      // ricava un array con le festivita
-      var holidayList = data.response;
 
       // crea un ciclo per compilare il template
       for (var i = 0; i < daysInMonth; i++) {
@@ -81,51 +65,62 @@ function printMonth(year, month) {
         // salvo il giorno reale corrente nel ciclo
         var currentDay = i+1;
 
-        // dichiaro la variabile holydayName che andro a compilare se
-        // momentDateInFormat e' un festivo
-        var holidayName = "";
-
-        // verifica giorni festivi e se presente aggiungo nome nel template
-        for (var j = 0; j < holidayList.length; j++) {
-          // ricava una alla volta le date e nomi delle festivita'
-          var holidayDate = holidayList[j].date;
-          // condizione che controlla se la data festivo corrisponde
-          if (holidayDate == momentDateInFormat) {
-            holidayName = holidayList[j].name;
-          }
-
-        }
-        // end for J
-
         // compila il dayTemplate con giorno festivo
         var context = {
           "day": currentDay,
           "month": monthInPrinting,
-          "dataMoment": momentDateInFormat, //non utilizzato per ora ma utile in futuro
-          "holiday": holidayName
+          "dataMoment": momentDateInFormat
         };
         // appendi in html
         var html = dayTemplate(context);
         $(".days").append(html);
-        // se la variabile holidayName non e' vuota aggiungo classe holiday
-        if (holidayName != "") {
-          $(".day_box:nth-child("+currentDay+")").addClass("holiday");
-        }
+
         // aggiungi un giorno
         momentDate.add(1, "day");
       }
       // end for i
-    },
-    "error": function (err) {
-      alert("E avvenuto un errore. " + err);
-    }
-  });
+
   // end server call ajax
 
 }
 
+// crea funzione per stampare i giorni festivi
+function printHolidays(year, month) {
+  // conzione se l'anno e' diverso da 2018
+  if (year == 2018) {
+    // ricava il mese attuale in indice array (parte da zero)
+    var monthIndex = month-1;
+  // faccio chiamata al server per scaricare la lista festivita del mese richiesto
+    $.ajax(
+     {
+      "url": "https://flynn.boolean.careers/exercises/api/holidays",
+      "data": {
+        "year": year,
+        "month": monthIndex
+      },
+      "method": "GET",
+      "success": function (data) {
+        // ricava un array con le festivita
+        var holidayList = data.response;
+
+        for (var i = 0; i < holidayList.length; i++) {
+          var holidayName = holidayList[i].name;
+          var holidayDate = holidayList[i].date;
+          var dayOfHoliday = moment(holidayDate).format("D");
+          console.log(dayOfHoliday);
+          $(".day_box:nth-child("+dayOfHoliday+")").addClass("holiday");
+          $(".day_box:nth-child("+dayOfHoliday+") .name_holiday").text(holidayName);
+        }
+
+      },
+      "error": function (err) {
+        alert("E avvenuto un errore. " + err);
+      }
+    });
+  }
+}
 // trasformo la data in oggetto momentJS
-function setMomentDate(year, month) {
+function getMomentDate(year, month) {
   return moment(year + " " + month, "YYYY M");
 }
 

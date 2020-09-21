@@ -1,3 +1,13 @@
+// Descrizione:
+// Creiamo un calendario dinamico con le festività.
+// Il calendario partirà da gennaio 2018 e si concluderà a dicembre 2018
+// (unici dati disponibili sull’API).
+// Milestone 1
+// Creiamo il mese di Gennaio, e con la chiamata all'API inseriamo le festività.
+// API: https://flynn.boolean.careers/exercises/api/holidays?year=2018&month=0
+
+// METODO CHE STAMPA IN RUNTIME LE DATE DELLE FESTIVITA
+
 $(document).ready(function() {
   // dichiaro variabili per settare la data
   var setYear = 2018;
@@ -10,12 +20,20 @@ $(document).ready(function() {
     if (setMonth < 12) {
       setMonth++;
       printMonth(setYear, setMonth);
+    } else {
+      setMonth = 1;
+      setYear++;
+      printMonth(setYear, setMonth);
     }
   });
   // al click su prev cambia il calendario al mese precedente
   $("#prev").click(function() {
     if (setMonth > 1) {
       setMonth--;
+      printMonth(setYear, setMonth);
+    } else {
+      setMonth = 12;
+      setYear--;
       printMonth(setYear, setMonth);
     }
   });
@@ -50,12 +68,11 @@ function printMonth(year, month) {
    {
     "url": "https://flynn.boolean.careers/exercises/api/holidays",
     "data": {
-      "year": year,
+      "year": 2018, //year
       "month": monthIndex
     },
     "method": "GET",
     "success": function (data) {
-      var dataHoliday = data;
       // ricava un array con le festivita
       var holidayList = data.response;
 
@@ -63,12 +80,12 @@ function printMonth(year, month) {
       for (var i = 0; i < daysInMonth; i++) {
         // trasforma l'oggetto moment in stringa
         var momentDateInFormat = momentDate.format("YYYY-MM-DD");
+        // salvo il giorno reale corrente nel ciclo
+        var currentDay = i+1;
 
         // dichiaro la variabile holydayName che andro a compilare se
         // momentDateInFormat e' un festivo
         var holidayName = "";
-        // salvo il giorno reale corrente nel ciclo
-        var currentDay = i+1;
 
         // verifica giorni festivi e se presente aggiungo nome nel template
         for (var j = 0; j < holidayList.length; j++) {
@@ -76,7 +93,7 @@ function printMonth(year, month) {
           var holidayDate = holidayList[j].date;
           // condizione che controlla se la data festivo corrisponde
           if (holidayDate == momentDateInFormat) {
-            holidayName = holidayList[j].name
+            holidayName = holidayList[j].name;
           }
 
         }
@@ -86,7 +103,7 @@ function printMonth(year, month) {
         var context = {
           "day": currentDay,
           "month": monthInPrinting,
-          "dataMoment": momentDateInFormat,
+          "dataMoment": momentDateInFormat, //non utilizzato per ora ma utile in futuro
           "holiday": holidayName
         };
         // appendi in html
@@ -102,7 +119,7 @@ function printMonth(year, month) {
       // end for i
     },
     "error": function (err) {
-      alert("E avvenuto un errore. "+ errore);
+      alert("E avvenuto un errore. " + err);
     }
   });
   // end server call ajax
