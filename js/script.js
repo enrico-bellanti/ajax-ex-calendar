@@ -107,7 +107,6 @@ function printHolidays(year, month) {
           var holidayName = holidayList[i].name;
           var holidayDate = holidayList[i].date;
           var dayOfHoliday = moment(holidayDate).format("D");
-          console.log(dayOfHoliday);
           $(".day_box:nth-child("+dayOfHoliday+")").addClass("holiday");
           $(".day_box:nth-child("+dayOfHoliday+") .name_holiday").text(holidayName);
         }
